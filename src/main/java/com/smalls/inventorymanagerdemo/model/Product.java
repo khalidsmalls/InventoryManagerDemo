@@ -1,7 +1,6 @@
 package com.smalls.inventorymanagerdemo.model;
 
-public abstract class Part {
-
+public class Product {
     private final int id;
 
     private String name;
@@ -11,16 +10,16 @@ public abstract class Part {
     private int stock;
 
     /**
-     * minimum stock
+     * product minimun stock
      */
     private int min;
 
     /**
-     * maximum stock
+     * product maximum stock
      */
     private int max;
 
-    public Part(
+    public Product(
             int id,
             String name,
             double price,
