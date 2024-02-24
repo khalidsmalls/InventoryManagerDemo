@@ -1,5 +1,9 @@
 package com.smalls.inventorymanagerdemo.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+
 public class Product {
     private final int id;
 
@@ -19,6 +23,8 @@ public class Product {
      */
     private int max;
 
+    ObservableMap<Integer, Part> associatedParts;
+
     public Product(
             int id,
             String name,
@@ -33,6 +39,7 @@ public class Product {
         this.stock = stock;
         this.min = min;
         this.max = max;
+        associatedParts = FXCollections.observableHashMap();
     }
 
     public int getId() {
@@ -77,5 +84,35 @@ public class Product {
 
     public void setMax(int max) {
         this.max = max;
+    }
+
+    public void addAssociatedPart(Part part) {
+        associatedParts.put(part.getId(), part);
+    }
+
+    public void addAssociatedParts(ObservableList<Part> parts) {
+
+        ObservableMap<Integer, Part> partsMap = FXCollections.observableHashMap();
+
+        for (Part p : parts) {
+           partsMap.put(p.getId(), p);
+        }
+
+        associatedParts.putAll(partsMap);
+    }
+
+    public void removeAssociatedPart(Part p) {
+       associatedParts.remove(p.getId(), p);
+    }
+
+    public void removeAssociatedParts(ObservableList<Part> parts) {
+
+        for (Part p : parts) {
+            associatedParts.remove(p.getId(), p);
+        }
+    }
+
+    public ObservableMap<Integer, Part> getAssociatedParts() {
+        return associatedParts;
     }
 }
