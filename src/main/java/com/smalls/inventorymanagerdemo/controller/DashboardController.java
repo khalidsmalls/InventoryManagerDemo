@@ -1,7 +1,310 @@
 package com.smalls.inventorymanagerdemo.controller;
 
+import com.smalls.inventorymanagerdemo.model.Inventory;
+import com.smalls.inventorymanagerdemo.model.Part;
+import com.smalls.inventorymanagerdemo.model.Product;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public class DashboardController {
+import java.net.URL;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+
+public class DashboardController implements Initializable {
+
+    @FXML
+    private TextField partSearchTextfield;
+
+    @FXML
+    private TextField productSearchTextfield;
+
+    @FXML
+    private TableView<Part> partTable;
+
+    @FXML
+    private TableView<Product> productTable;
+
+    private NumberFormat currencyFormat;
+
+    private final Stage stage = new Stage();
+
+    private final UnaryOperator<TextFormatter.Change> textLengthFilterOperator = change -> {
+        String newText = change.getControlNewText();
+        if (newText.length() > 25) {
+            return null;
+        }
+        return change;
+    };
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        initPartTable();
+        initProductTable();
+        partSearchTextfield.setTextFormatter(
+                new TextFormatter<>(textLengthFilterOperator)
+        );
+        productSearchTextfield.setTextFormatter(
+                new TextFormatter<>(textLengthFilterOperator)
+        );
+        currencyFormat = NumberFormat.getCurrencyInstance();
+    }
+
+    @FXML
+    private void onPartSearch() {
+        String searchString = partSearchTextfield.getText().trim();
+        if (searchString.isEmpty()) {
+            return;
+        }
+
+        partTable.setPlaceholder(new Text("Part not found"));
+        ObservableList<Part> parts = FXCollections.observableArrayList();
+
+        try {
+            //if searchString is a number
+            //then get part by id
+            int id = Integer.parseInt(searchString);
+            Part p = Inventory.getPartById(id);
+            if (p != null) {
+                parts.add(p);
+            }
+            partTable.setItems(parts);
+            partTable.getSelectionModel().select(p);
+        } catch (NumberFormatException e) {
+            //searchString must be a string
+            //search parts by name
+            ObservableMap<Integer, Part> partMap = Inventory.searchParts(searchString);
+            if (!partMap.isEmpty()) {
+                parts.addAll(partMap.values());
+                partTable.setItems(parts);
+                if (parts.size() == 1) {
+                    partTable.getSelectionModel().select(parts.getFirst());
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void onProductSearch() {
+        String searchString = productSearchTextfield.getText().trim();
+        if (searchString.isEmpty()) {
+            return;
+        }
+
+        productTable.setPlaceholder(new Text("Product not found"));
+        ObservableList<Product> products = FXCollections.observableArrayList();
+
+        try {
+            int id = Integer.parseInt(searchString);
+            Product p = Inventory.getProductById(id);
+            if (p != null) {
+                products.add(p);
+            }
+            productTable.setItems(products);
+            productTable.getSelectionModel().select(p);
+        } catch (NumberFormatException e) {
+            ObservableMap<Integer, Product> productMap = Inventory.searchProducts(searchString);
+            if (!productMap.isEmpty()) {
+                products.addAll(productMap.values());
+                productTable.setItems(products);
+                if (products.size() == 1) {
+                    productTable.getSelectionModel().select(products.getFirst());
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void onNewPart() {
+    }
+
+    @FXML
+    private void onModifyPart() {
+    }
+
+    @FXML
+    private void onDeletePart() {
+    }
+
+    @FXML
+    private void onNewProduct() {
+    }
+
+    @FXML
+    private void onModifyProduct() {
+    }
+
+    @FXML
+    private void onDeleteProduct() {
+    }
+
+    @FXML
+    private void onClose(ActionEvent event) {
+        Alert confirm = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Are you sure you would like to close the application?"
+        );
+        Optional<ButtonType> result = confirm.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
+        }
+    }
+
+    private void initPartTable() {
+        ObservableList<Part> parts = FXCollections.observableArrayList();
+        parts.addAll(Inventory.getAllParts().values());
+        partTable.setItems(parts);
+
+        TableColumn<Part, Integer> partIdColumn = new TableColumn<>("Part ID");
+        TableColumn<Part, String> partTypeColumn = new TableColumn<>("Type");
+        TableColumn<Part, String> partNameColumn = new TableColumn<>("Name");
+        TableColumn<Part, Double> partPriceColumn = new TableColumn<>("Price per unit");
+        TableColumn<Part, Integer> partStockColumn = new TableColumn<>("Stock");
+        TableColumn<Part, Integer> partMinColumn = new TableColumn<>("Min");
+        TableColumn<Part, Integer> partMaxColumn = new TableColumn<>("Max");
+
+        partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        partStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partMinColumn.setCellValueFactory(new PropertyValueFactory<>("min"));
+        partMaxColumn.setCellValueFactory(new PropertyValueFactory<>("max"));
+
+        partTable.getColumns().setAll(
+                Arrays.asList(
+                        partIdColumn,
+                        partTypeColumn,
+                        partNameColumn,
+                        partPriceColumn,
+                        partStockColumn,
+                        partMinColumn,
+                        partMaxColumn
+                )
+        );
+
+        partIdColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.1)
+        );
+        partTypeColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.19)
+        );
+        partNameColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.19)
+        );
+        partPriceColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.19)
+        );
+        partStockColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.11)
+        );
+        partMinColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.11)
+        );
+        partMaxColumn.prefWidthProperty().bind(
+                partTable.widthProperty().multiply(.11)
+        );
+
+        partIdColumn.setResizable(false);
+        partTypeColumn.setResizable(false);
+        partNameColumn.setResizable(false);
+        partPriceColumn.setResizable(false);
+        partStockColumn.setResizable(false);
+        partMinColumn.setResizable(false);
+        partMaxColumn.setResizable(false);
+
+        //set currency formatter on part price cell
+        partPriceColumn.setCellFactory(c -> new TableCell<Part, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(currencyFormat.format(price));
+                }
+            }
+        });
+    }
+
+    private void initProductTable() {
+        ObservableList<Product> products = FXCollections.observableArrayList();
+        products.addAll(Inventory.getAllProducts().values());
+        productTable.setItems(products);
+
+        TableColumn<Product, Integer> productIdColumn = new TableColumn<>("Product ID");
+        TableColumn<Product, String> productNameColumn = new TableColumn<>("Name");
+        TableColumn<Product, Double> productPriceColumn = new TableColumn<>("Price per unit");
+        TableColumn<Product, Integer> productStockColumn = new TableColumn<>("Stock");
+        TableColumn<Product, Integer> productMinColumn = new TableColumn<>("Min");
+        TableColumn<Product, Integer> productMaxColumn = new TableColumn<>("Max");
+
+        productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        productStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productMinColumn.setCellValueFactory(new PropertyValueFactory<>("min"));
+        productMaxColumn.setCellValueFactory(new PropertyValueFactory<>("max"));
+
+        productTable.getColumns().setAll(
+                Arrays.asList(
+                        productIdColumn,
+                        productNameColumn,
+                        productPriceColumn,
+                        productStockColumn,
+                        productMinColumn,
+                        productMaxColumn
+                )
+        );
+
+        productIdColumn.prefWidthProperty().bind(
+                productTable.widthProperty().multiply(0.14)
+        );
+        productNameColumn.prefWidthProperty().bind(
+                productTable.widthProperty().multiply(0.22)
+        );
+        productPriceColumn.prefWidthProperty().bind(
+                productTable.widthProperty().multiply(0.19)
+        );
+        productStockColumn.prefWidthProperty().bind(
+                productTable.widthProperty().multiply(0.15)
+        );
+        productMinColumn.prefWidthProperty().bind(
+                productTable.widthProperty().multiply(0.15)
+        );
+        productMaxColumn.prefWidthProperty().bind(
+                productTable.widthProperty().multiply(0.15)
+        );
+
+        productIdColumn.setResizable(false);
+        productNameColumn.setResizable(false);
+        productPriceColumn.setResizable(false);
+        productStockColumn.setResizable(false);
+        productMinColumn.setResizable(false);
+        productMaxColumn.setResizable(false);
+
+        productPriceColumn.setCellFactory(cell -> new TableCell<Product, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(currencyFormat.format(price));
+                }
+            }
+        });
+
+    }
 }
