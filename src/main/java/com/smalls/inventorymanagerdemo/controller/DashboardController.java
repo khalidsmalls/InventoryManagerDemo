@@ -41,6 +41,8 @@ public class DashboardController implements Initializable {
 
     private final Stage stage = new Stage();
 
+    private ObservableList<Part> parts;
+
     public final Comparator<Part> comparePartsById = Comparator.comparingInt(Part::getId);
 
     private final UnaryOperator<TextFormatter.Change> textLengthFilterOperator = change -> {
@@ -68,6 +70,7 @@ public class DashboardController implements Initializable {
     private void onPartSearch() {
         String searchString = partSearchTextfield.getText().trim();
         if (searchString.isEmpty()) {
+            partTable.setItems(parts);
             return;
         }
 
@@ -152,7 +155,9 @@ public class DashboardController implements Initializable {
         PartFormController controller = loader.getController();
         Part p = partTable.getSelectionModel().getSelectedItem();
         if (p == null) {
-            new Alert(Alert.AlertType.ERROR, "Please select a part").showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                    "Please select a part")
+                    .showAndWait();
             return;
         }
         controller.setPart(p);
@@ -202,7 +207,7 @@ public class DashboardController implements Initializable {
 
     private void initPartTable() {
         ObservableMap<Integer, Part> partsMap = Inventory.getAllParts();
-        ObservableList<Part> parts = FXCollections.observableArrayList(partsMap.values());
+        parts = FXCollections.observableArrayList(partsMap.values());
         partsMap.addListener((MapChangeListener<Integer, ? super Part>) change -> {
             if (change.wasAdded()) {
                 Part update = change.getValueAdded();
@@ -240,7 +245,7 @@ public class DashboardController implements Initializable {
             } else if (part instanceof Outsourced) {
                 return new SimpleStringProperty("Outsourced");
             } else {
-                return new SimpleStringProperty("Dunno");
+                return new SimpleStringProperty("Dunno what this part is");
             }
         });
 
@@ -286,8 +291,6 @@ public class DashboardController implements Initializable {
         partMinColumn.setResizable(false);
         partMaxColumn.setResizable(false);
 
-
-        //set currency formatter on part price cell
         partPriceColumn.setCellFactory(c -> new TableCell<Part, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
