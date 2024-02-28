@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-public class NewPartController implements Initializable {
+public class PartFormController implements Initializable {
 
     private final String IN_HOUSE_LABEL_TEXT = "Machine ID";
 
@@ -22,7 +22,7 @@ public class NewPartController implements Initializable {
     private Label partFormLabel;
 
     @FXML
-    private Label dynamicLabel;
+    private Label typeLabel;
 
     @FXML
     private RadioButton inHouseRadioBtn;
@@ -49,9 +49,11 @@ public class NewPartController implements Initializable {
     private TextField maxTextfield;
 
     @FXML
-    private TextField dynamicTextfield;
+    private TextField typeTextfield;
 
     private ToggleGroup toggleGroup;
+
+    private Part part;
 
     private final UnaryOperator<TextFormatter.Change> intFilter = change -> {
         String newText = change.getControlNewText();
@@ -91,20 +93,44 @@ public class NewPartController implements Initializable {
         toggleGroup = new ToggleGroup();
         toggleGroup.getToggles().addAll(inHouseRadioBtn, outsourcedRadioBtn);
         inHouseRadioBtn.setSelected(true);
-        dynamicLabel.setText(IN_HOUSE_LABEL_TEXT);
+        typeLabel.setText(IN_HOUSE_LABEL_TEXT);
         idTextfield.setEditable(false);
         String PART_ID_TEXTFIELD_PROMPT = "Auto Gen - Disabled";
         idTextfield.setText(PART_ID_TEXTFIELD_PROMPT);
-        partFormLabel.setText("New Part");
+        if (part == null) {
+            partFormLabel.setText("New Part");
+        }
         setTextFormatters();
+    }
 
+    public void setPart(Part part) {
+        this.part = part;
+        if (part != null) {
+            idTextfield.setText(String.valueOf(part.getId()));
+            nameTextfield.setText(part.getName());
+            stockTextfield.setText(String.valueOf(part.getStock()));
+            priceTextfield.setText(String.valueOf(part.getPrice()));
+            minTextfield.setText(String.valueOf(part.getMin()));
+            maxTextfield.setText(String.valueOf(part.getMax()));
+            partFormLabel.setText("Modify Part");
+            if (part instanceof InHouse) {
+                typeTextfield.setText(
+                        String.valueOf(
+                                ((InHouse) part).getMachineId())
+                );
+            } else {
+                typeTextfield.setText(
+                        ((Outsourced) part).getCompanyName()
+                );
+            }
+        }
     }
 
     @FXML
     private void onInHouseRadioClick() {
-        dynamicLabel.setText(IN_HOUSE_LABEL_TEXT);
-        dynamicTextfield.clear();
-        dynamicTextfield.setTextFormatter(
+        typeLabel.setText(IN_HOUSE_LABEL_TEXT);
+        typeTextfield.clear();
+        typeTextfield.setTextFormatter(
                 new TextFormatter<>(intFilter)
         );
     }
@@ -112,83 +138,91 @@ public class NewPartController implements Initializable {
     @FXML
     private void onOutsourcedRadioClick() {
         String OUTSOURCED_LABEL_TEXT = "Company Name";
-        dynamicLabel.setText(OUTSOURCED_LABEL_TEXT);
-        dynamicTextfield.clear();
-        dynamicTextfield.setTextFormatter(
+        typeLabel.setText(OUTSOURCED_LABEL_TEXT);
+        typeTextfield.clear();
+        typeTextfield.setTextFormatter(
                 new TextFormatter<>(stringFilter)
         );
     }
 
     @FXML
     private void onSave(ActionEvent event) {
-        Part part = null;
         String name;
         double price;
         int id, stock, min, max;
 
         if (validateFields()) {
-            if (validateStock()) {
-                id = Inventory.getNextPartId();
-                name = nameTextfield.getText();
-                price = Double.parseDouble(priceTextfield.getText());
-                stock = Integer.parseInt(stockTextfield.getText());
-                min = Integer.parseInt(minTextfield.getText());
-                max = Integer.parseInt(maxTextfield.getText());
-
-                if (toggleGroup.getSelectedToggle() == inHouseRadioBtn) {
-                    int machineId;
-                    try {
-                        machineId = Integer.parseInt(dynamicTextfield.getText());
-                    } catch (NumberFormatException e) {
-                        new Alert(Alert.AlertType.ERROR,
-                                "Please enter a valid machine ID"
-                        ).showAndWait();
-                        return;
-                    }
-                    part = new InHouse(
-                            id,
-                            name,
-                            price,
-                            stock,
-                            min,
-                            max,
-                            machineId
-                    );
-                }
-
-                if (toggleGroup.getSelectedToggle() == outsourcedRadioBtn) {
-                    String companyName = dynamicTextfield.getText();
-                    if (companyName.isEmpty()) {
-                        new Alert(Alert.AlertType.ERROR,
-                                "Please enter a company name"
-                        ).showAndWait();
-                        return;
-                    }
-                    part = new Outsourced(
-                            id,
-                            name,
-                            price,
-                            stock,
-                            min,
-                            max,
-                            companyName
-                    );
-                }
-
-                Inventory.addPart(part);
-                clearTextfields();
-                ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
-            } else {
-                //validate stock returned false
-                new Alert(Alert.AlertType.ERROR,
-                        "Stock must be greater than or equal to min and less than or equal to max"
-                ).showAndWait();
-            }
+            name = nameTextfield.getText();
+            stock = Integer.parseInt(stockTextfield.getText());
+            price = Double.parseDouble(priceTextfield.getText());
+            min = Integer.parseInt(minTextfield.getText());
+            max = Integer.parseInt(maxTextfield.getText());
         } else {
-            //validateFields returned false
-            new Alert(Alert.AlertType.ERROR,
-                    "All fields are required").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "All fields are required").showAndWait();
+            return;
         }
+
+        if (!validateStock()) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Stock must be greater than or equal to min and less than or equal to max"
+            ).showAndWait();
+            return;
+        }
+
+        if (part == null) {
+            id = Inventory.getNextPartId();
+        } else {
+            id = part.getId();
+        }
+
+        Part updatedPart = null;
+
+        if (toggleGroup.getSelectedToggle() == inHouseRadioBtn) {
+            int machineId;
+            try {
+                machineId = Integer.parseInt(typeTextfield.getText());
+            } catch (NumberFormatException e) {
+                new Alert(Alert.AlertType.ERROR,
+                        "Please enter a valid machine ID"
+                ).showAndWait();
+                return;
+            }
+            updatedPart = new InHouse(
+                    id,
+                    name,
+                    price,
+                    stock,
+                    min,
+                    max,
+                    machineId
+            );
+        }
+
+        if (toggleGroup.getSelectedToggle() == outsourcedRadioBtn) {
+            String companyName = typeTextfield.getText();
+            if (companyName.isEmpty()) {
+                new Alert(Alert.AlertType.ERROR,
+                        "Please enter a company name"
+                ).showAndWait();
+                return;
+            }
+            updatedPart = new Outsourced(
+                    id,
+                    name,
+                    price,
+                    stock,
+                    min,
+                    max,
+                    companyName
+            );
+        }
+        if (part != null) {
+            Inventory.updatePart(part.getId(), updatedPart);
+        } else {
+            Inventory.addPart(updatedPart);
+        }
+        clearTextfields();
+        ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
     }
 
     @FXML
@@ -218,7 +252,7 @@ public class NewPartController implements Initializable {
         stockTextfield.clear();
         minTextfield.clear();
         maxTextfield.clear();
-        dynamicTextfield.clear();
+        typeTextfield.clear();
     }
 
     private void setTextFormatters() {
@@ -237,7 +271,7 @@ public class NewPartController implements Initializable {
         nameTextfield.setTextFormatter(
                 new TextFormatter<>(stringFilter)
         );
-        dynamicTextfield.setTextFormatter(
+        typeTextfield.setTextFormatter(
                 new TextFormatter<>(intFilter)
         );
     }

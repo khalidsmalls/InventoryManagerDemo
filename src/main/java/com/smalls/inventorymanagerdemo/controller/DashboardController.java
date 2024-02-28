@@ -1,24 +1,26 @@
 package com.smalls.inventorymanagerdemo.controller;
 
-import com.smalls.inventorymanagerdemo.model.Inventory;
-import com.smalls.inventorymanagerdemo.model.Part;
-import com.smalls.inventorymanagerdemo.model.Product;
+import com.smalls.inventorymanagerdemo.model.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class DashboardController implements Initializable {
@@ -38,6 +40,8 @@ public class DashboardController implements Initializable {
     private NumberFormat currencyFormat;
 
     private final Stage stage = new Stage();
+
+    public final Comparator<Part> comparePartsById = Comparator.comparingInt(Part::getId);
 
     private final UnaryOperator<TextFormatter.Change> textLengthFilterOperator = change -> {
         String newText = change.getControlNewText();
@@ -125,15 +129,50 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
-    private void onNewPart() {
+    private void onNewPart() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(
+                "/com/smalls/inventorymanagerdemo/partForm-view.fxml")
+        );
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setMinWidth(1000.0);
+        stage.setMinHeight(635.0);
+        stage.show();
     }
 
     @FXML
-    private void onModifyPart() {
+    private void onModifyPart() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(
+                "/com/smalls/inventorymanagerdemo/partForm-view.fxml")
+        );
+        Parent root = loader.load();
+        PartFormController controller = loader.getController();
+        Part p = partTable.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            new Alert(Alert.AlertType.ERROR, "Please select a part").showAndWait();
+            return;
+        }
+        controller.setPart(p);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setMinWidth(1000.0);
+        stage.setMinHeight(635.0);
+        stage.show();
     }
 
     @FXML
     private void onDeletePart() {
+        Part p = partTable.getSelectionModel().getSelectedItem();
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you would like to delete " + p.getName() + "?"
+        );
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Inventory.removePart(p.getId());
+        }
     }
 
     @FXML
@@ -162,8 +201,22 @@ public class DashboardController implements Initializable {
     }
 
     private void initPartTable() {
-        ObservableList<Part> parts = FXCollections.observableArrayList();
-        parts.addAll(Inventory.getAllParts().values());
+        ObservableMap<Integer, Part> partsMap = Inventory.getAllParts();
+        ObservableList<Part> parts = FXCollections.observableArrayList(partsMap.values());
+        partsMap.addListener((MapChangeListener<Integer, ? super Part>) change -> {
+            if (change.wasAdded()) {
+                Part update = change.getValueAdded();
+                parts.sort(comparePartsById);
+                int index = Collections.binarySearch(parts, update, comparePartsById);
+                if (index >= 0) {
+                    parts.set(index, update);
+                    return;
+                }
+                parts.add(update);
+            } else {
+                parts.remove(change.getValueRemoved());
+            }
+        });
         partTable.setItems(parts);
 
         TableColumn<Part, Integer> partIdColumn = new TableColumn<>("Part ID");
@@ -175,12 +228,21 @@ public class DashboardController implements Initializable {
         TableColumn<Part, Integer> partMaxColumn = new TableColumn<>("Max");
 
         partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         partPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         partStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partMinColumn.setCellValueFactory(new PropertyValueFactory<>("min"));
         partMaxColumn.setCellValueFactory(new PropertyValueFactory<>("max"));
+        partTypeColumn.setCellValueFactory(c -> {
+            Part part = c.getValue();
+            if (part instanceof InHouse) {
+                return new SimpleStringProperty("InHouse");
+            } else if (part instanceof Outsourced) {
+                return new SimpleStringProperty("Outsourced");
+            } else {
+                return new SimpleStringProperty("Dunno");
+            }
+        });
 
         partTable.getColumns().setAll(
                 Arrays.asList(
@@ -223,6 +285,7 @@ public class DashboardController implements Initializable {
         partStockColumn.setResizable(false);
         partMinColumn.setResizable(false);
         partMaxColumn.setResizable(false);
+
 
         //set currency formatter on part price cell
         partPriceColumn.setCellFactory(c -> new TableCell<Part, Double>() {
