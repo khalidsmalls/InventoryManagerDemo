@@ -3,6 +3,7 @@ package com.smalls.inventorymanagerdemo.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
+import java.util.Comparator;
 import java.util.Map;
 
 public class Inventory {
@@ -30,6 +31,9 @@ public class Inventory {
     public static ObservableMap<Integer, Product> getAllProducts() {
         return products;
     }
+
+
+    private static final Comparator<Product> compareProductsById = Comparator.comparingInt(Product::getId);
 
     /**
      * add new part and increment id
