@@ -95,18 +95,16 @@ public class PartFormController implements Initializable {
         toggleGroup = new ToggleGroup();
         toggleGroup.getToggles().addAll(inHouseRadioBtn, outsourcedRadioBtn);
         idTextfield.setEditable(false);
-        if (part == null) {
-            initNewPart();
-        } else {
-            initModifyPart(part);
-        }
         setTextFormatters();
     }
 
-
-
     public void setPart(Part part) {
         this.part = part;
+        if (part == null) {
+            initNewPartForm();
+        } else {
+            initModifyPartForm(part);
+        }
     }
 
     @FXML
@@ -255,7 +253,7 @@ public class PartFormController implements Initializable {
         );
     }
 
-    private void initNewPart() {
+    private void initNewPartForm() {
         idTextfield.setText("Auto Gen - Disabled");
         partFormLabel.setText("New Part");
         typeLabel.setText(IN_HOUSE_LABEL_TEXT);
@@ -265,15 +263,15 @@ public class PartFormController implements Initializable {
         inHouseRadioBtn.setSelected(true);
     }
 
-    private void initModifyPart(Part part) {
-        idTextfield.setText(String.valueOf(part.getId()));
-        nameTextfield.setText(part.getName());
-        stockTextfield.setText(String.valueOf(part.getStock()));
-        priceTextfield.setText(String.valueOf(part.getPrice()));
-        minTextfield.setText(String.valueOf(part.getMin()));
-        maxTextfield.setText(String.valueOf(part.getMax()));
+    private void initModifyPartForm(Part p) {
+        idTextfield.setText(String.valueOf(p.getId()));
+        nameTextfield.setText(p.getName());
+        stockTextfield.setText(String.valueOf(p.getStock()));
+        priceTextfield.setText(String.valueOf(p.getPrice()));
+        minTextfield.setText(String.valueOf(p.getMin()));
+        maxTextfield.setText(String.valueOf(p.getMax()));
         partFormLabel.setText("Modify Part");
-        if (part instanceof InHouse) {
+        if (p instanceof InHouse) {
             inHouseRadioBtn.setSelected(true);
             typeLabel.setText(IN_HOUSE_LABEL_TEXT);
             typeTextfield.setTextFormatter(
@@ -281,7 +279,7 @@ public class PartFormController implements Initializable {
             );
             typeTextfield.setText(
                     String.valueOf(
-                            ((InHouse) part).getMachineId())
+                            ((InHouse) p).getMachineId())
             );
         } else {
             outsourcedRadioBtn.setSelected(true);
@@ -290,7 +288,7 @@ public class PartFormController implements Initializable {
                     new TextFormatter<>(stringFilter)
             );
             typeTextfield.setText(
-                    ((Outsourced) part).getCompanyName()
+                    ((Outsourced) p).getCompanyName()
             );
         }
     }

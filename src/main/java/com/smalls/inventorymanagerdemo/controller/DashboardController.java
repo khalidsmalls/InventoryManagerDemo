@@ -138,6 +138,8 @@ public class DashboardController implements Initializable {
                 "/com/smalls/inventorymanagerdemo/partForm-view.fxml")
         );
         Parent root = loader.load();
+        PartFormController controller = loader.getController();
+        controller.setPart(null);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setMinWidth(1000.0);
