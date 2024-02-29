@@ -107,15 +107,15 @@
                                  <center>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <TableView fx:id="partTable" layoutX="290.0" layoutY="10.0" prefHeight="250.0" prefWidth="837.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="218.0" AnchorPane.topAnchor="5.0">
+                                          <TableView fx:id="partsTable" layoutX="290.0" layoutY="10.0" prefHeight="250.0" prefWidth="837.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="218.0" AnchorPane.topAnchor="5.0">
                                             <columns>
-                                              <TableColumn fx:id="partIdColumn" prefWidth="75.0" text="ID" />
-                                              <TableColumn fx:id="partTypeColumn" prefWidth="128.0" text="Type" />
-                                                <TableColumn fx:id="partNameColumn" prefWidth="127.0" text="Name" />
-                                                <TableColumn fx:id="partPriceColumn" prefWidth="151.0" text="Price per unit" />
-                                                <TableColumn fx:id="partStockColumn" prefWidth="127.0" text="Stock" />
-                                                <TableColumn fx:id="partMaxColumn" prefWidth="111.0" text="Max" />
-                                                <TableColumn fx:id="partMinColumn" prefWidth="117.0" text="Min" />
+                                              <TableColumn fx:id="partIdColumn" prefWidth="75.0" resizable="false" text="ID" />
+                                              <TableColumn fx:id="partTypeColumn" prefWidth="128.0" resizable="false" text="Type" />
+                                                <TableColumn fx:id="partNameColumn" prefWidth="127.0" resizable="false" text="Name" />
+                                                <TableColumn fx:id="partPriceColumn" prefWidth="151.0" resizable="false" text="Price per unit" />
+                                                <TableColumn fx:id="partStockColumn" prefWidth="127.0" resizable="false" text="Stock" />
+                                                <TableColumn fx:id="partMaxColumn" prefWidth="111.0" resizable="false" text="Max" />
+                                                <TableColumn fx:id="partMinColumn" prefWidth="117.0" resizable="false" text="Min" />
                                             </columns>
                                           </TableView>
                                        </children>
@@ -229,12 +229,12 @@
                                        <children>
                                           <TableView fx:id="productTable" layoutX="290.0" layoutY="10.0" prefHeight="250.0" prefWidth="837.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="218.0" AnchorPane.topAnchor="5.0">
                                              <columns>
-                                                <TableColumn fx:id="productIdColumn" prefWidth="75.0" text="ID" />
-                                                <TableColumn fx:id="productNameColumn" prefWidth="224.0" text="Name" />
-                                                <TableColumn fx:id="productPriceColumn" prefWidth="165.0" text="Price per unit" />
-                                                <TableColumn fx:id="productStockColumn" prefWidth="122.0" text="Stock" />
-                                                <TableColumn fx:id="productMinColumn" prefWidth="123.0" text="Min" />
-                                                <TableColumn fx:id="productMaxColumn" prefWidth="127.0" text="Max" />
+                                                <TableColumn fx:id="productIdColumn" prefWidth="75.0" resizable="false" text="ID" />
+                                                <TableColumn fx:id="productNameColumn" prefWidth="224.0" resizable="false" text="Name" />
+                                                <TableColumn fx:id="productPriceColumn" prefWidth="165.0" resizable="false" text="Price per unit" />
+                                                <TableColumn fx:id="productStockColumn" prefWidth="122.0" resizable="false" text="Stock" />
+                                                <TableColumn fx:id="productMinColumn" prefWidth="123.0" resizable="false" text="Min" />
+                                                <TableColumn fx:id="productMaxColumn" prefWidth="127.0" resizable="false" text="Max" />
                                              </columns>
                                           </TableView>
                                        </children>

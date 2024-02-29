@@ -32,10 +32,49 @@ public class DashboardController implements Initializable {
     private TextField productSearchTextfield;
 
     @FXML
-    private TableView<Part> partTable;
+    private TableView<Part> partsTable;
+
+    @FXML
+    private TableColumn<Part, Integer> partIdColumn;
+
+    @FXML
+    private TableColumn<Part, String> partTypeColumn;
+
+    @FXML
+    private TableColumn<Part, String> partNameColumn;
+
+    @FXML
+    private TableColumn<Part, Double> partPriceColumn;
+
+    @FXML
+    private TableColumn<Part, Integer> partStockColumn;
+
+    @FXML
+    private TableColumn<Part, Integer> partMinColumn;
+
+    @FXML
+    private TableColumn<Part, Integer> partMaxColumn;
 
     @FXML
     private TableView<Product> productTable;
+
+    @FXML
+    private TableColumn<Product, Integer> productIdColumn;
+
+    @FXML
+    private TableColumn<Product, String> productNameColumn;
+
+    @FXML
+    private TableColumn<Product, Double> productPriceColumn;
+
+    @FXML
+    private TableColumn<Product, Integer> productStockColumn;
+
+    @FXML
+    private TableColumn<Product, Integer> productMinColumn;
+
+    @FXML
+    private TableColumn<Product, Integer> productMaxColumn;
 
     private NumberFormat currencyFormat;
 
@@ -55,7 +94,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initPartTable();
+        initPartsTable();
         initProductTable();
         partSearchTextfield.setTextFormatter(
                 new TextFormatter<>(textLengthFilterOperator)
@@ -70,11 +109,11 @@ public class DashboardController implements Initializable {
     private void onPartSearch() {
         String searchString = partSearchTextfield.getText().trim();
         if (searchString.isEmpty()) {
-            partTable.setItems(parts);
+            partsTable.setItems(parts);
             return;
         }
 
-        partTable.setPlaceholder(new Text("Part not found"));
+        partsTable.setPlaceholder(new Text("Part not found"));
         ObservableList<Part> parts = FXCollections.observableArrayList();
 
         try {
@@ -85,17 +124,17 @@ public class DashboardController implements Initializable {
             if (p != null) {
                 parts.add(p);
             }
-            partTable.setItems(parts);
-            partTable.getSelectionModel().select(p);
+            partsTable.setItems(parts);
+            partsTable.getSelectionModel().select(p);
         } catch (NumberFormatException e) {
             //searchString must be a string
             //search parts by name
             ObservableMap<Integer, Part> partMap = Inventory.searchParts(searchString);
             if (!partMap.isEmpty()) {
                 parts.addAll(partMap.values());
-                partTable.setItems(parts);
+                partsTable.setItems(parts);
                 if (parts.size() == 1) {
-                    partTable.getSelectionModel().select(parts.getFirst());
+                    partsTable.getSelectionModel().select(parts.getFirst());
                 }
             }
         }
@@ -155,7 +194,7 @@ public class DashboardController implements Initializable {
         );
         Parent root = loader.load();
         PartFormController controller = loader.getController();
-        Part p = partTable.getSelectionModel().getSelectedItem();
+        Part p = partsTable.getSelectionModel().getSelectedItem();
         if (p == null) {
             new Alert(Alert.AlertType.ERROR,
                     "Please select a part")
@@ -172,7 +211,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void onDeletePart() {
-        Part p = partTable.getSelectionModel().getSelectedItem();
+        Part p = partsTable.getSelectionModel().getSelectedItem();
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you would like to delete " + p.getName() + "?"
         );
@@ -207,7 +246,7 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void initPartTable() {
+    private void initPartsTable() {
         ObservableMap<Integer, Part> partsMap = Inventory.getAllParts();
         parts = FXCollections.observableArrayList(partsMap.values());
         partsMap.addListener((MapChangeListener<Integer, ? super Part>) change -> {
@@ -224,15 +263,7 @@ public class DashboardController implements Initializable {
                 parts.remove(change.getValueRemoved());
             }
         });
-        partTable.setItems(parts);
-
-        TableColumn<Part, Integer> partIdColumn = new TableColumn<>("Part ID");
-        TableColumn<Part, String> partTypeColumn = new TableColumn<>("Type");
-        TableColumn<Part, String> partNameColumn = new TableColumn<>("Name");
-        TableColumn<Part, Double> partPriceColumn = new TableColumn<>("Price per unit");
-        TableColumn<Part, Integer> partStockColumn = new TableColumn<>("Stock");
-        TableColumn<Part, Integer> partMinColumn = new TableColumn<>("Min");
-        TableColumn<Part, Integer> partMaxColumn = new TableColumn<>("Max");
+        partsTable.setItems(parts);
 
         partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -251,48 +282,6 @@ public class DashboardController implements Initializable {
             }
         });
 
-        partTable.getColumns().setAll(
-                Arrays.asList(
-                        partIdColumn,
-                        partTypeColumn,
-                        partNameColumn,
-                        partPriceColumn,
-                        partStockColumn,
-                        partMinColumn,
-                        partMaxColumn
-                )
-        );
-
-        partIdColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.1)
-        );
-        partTypeColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.19)
-        );
-        partNameColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.19)
-        );
-        partPriceColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.19)
-        );
-        partStockColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.11)
-        );
-        partMinColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.11)
-        );
-        partMaxColumn.prefWidthProperty().bind(
-                partTable.widthProperty().multiply(.11)
-        );
-
-        partIdColumn.setResizable(false);
-        partTypeColumn.setResizable(false);
-        partNameColumn.setResizable(false);
-        partPriceColumn.setResizable(false);
-        partStockColumn.setResizable(false);
-        partMinColumn.setResizable(false);
-        partMaxColumn.setResizable(false);
-
         partPriceColumn.setCellFactory(c -> new TableCell<Part, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
@@ -307,16 +296,10 @@ public class DashboardController implements Initializable {
     }
 
     private void initProductTable() {
-        ObservableList<Product> products = FXCollections.observableArrayList();
-        products.addAll(Inventory.getAllProducts().values());
+        ObservableList<Product> products = FXCollections.observableArrayList(
+                Inventory.getAllProducts().values()
+        );
         productTable.setItems(products);
-
-        TableColumn<Product, Integer> productIdColumn = new TableColumn<>("Product ID");
-        TableColumn<Product, String> productNameColumn = new TableColumn<>("Name");
-        TableColumn<Product, Double> productPriceColumn = new TableColumn<>("Price per unit");
-        TableColumn<Product, Integer> productStockColumn = new TableColumn<>("Stock");
-        TableColumn<Product, Integer> productMinColumn = new TableColumn<>("Min");
-        TableColumn<Product, Integer> productMaxColumn = new TableColumn<>("Max");
 
         productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -324,43 +307,6 @@ public class DashboardController implements Initializable {
         productStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         productMinColumn.setCellValueFactory(new PropertyValueFactory<>("min"));
         productMaxColumn.setCellValueFactory(new PropertyValueFactory<>("max"));
-
-        productTable.getColumns().setAll(
-                Arrays.asList(
-                        productIdColumn,
-                        productNameColumn,
-                        productPriceColumn,
-                        productStockColumn,
-                        productMinColumn,
-                        productMaxColumn
-                )
-        );
-
-        productIdColumn.prefWidthProperty().bind(
-                productTable.widthProperty().multiply(0.14)
-        );
-        productNameColumn.prefWidthProperty().bind(
-                productTable.widthProperty().multiply(0.22)
-        );
-        productPriceColumn.prefWidthProperty().bind(
-                productTable.widthProperty().multiply(0.19)
-        );
-        productStockColumn.prefWidthProperty().bind(
-                productTable.widthProperty().multiply(0.15)
-        );
-        productMinColumn.prefWidthProperty().bind(
-                productTable.widthProperty().multiply(0.15)
-        );
-        productMaxColumn.prefWidthProperty().bind(
-                productTable.widthProperty().multiply(0.15)
-        );
-
-        productIdColumn.setResizable(false);
-        productNameColumn.setResizable(false);
-        productPriceColumn.setResizable(false);
-        productStockColumn.setResizable(false);
-        productMinColumn.setResizable(false);
-        productMaxColumn.setResizable(false);
 
         productPriceColumn.setCellFactory(cell -> new TableCell<Product, Double>() {
             @Override
