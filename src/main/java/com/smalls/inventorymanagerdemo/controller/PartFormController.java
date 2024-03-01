@@ -132,11 +132,11 @@ public class PartFormController implements Initializable {
         int id, stock, min, max;
 
         if (validateFields()) {
-            name = nameTextfield.getText();
-            stock = Integer.parseInt(stockTextfield.getText());
-            price = Double.parseDouble(priceTextfield.getText());
-            min = Integer.parseInt(minTextfield.getText());
-            max = Integer.parseInt(maxTextfield.getText());
+            name = nameTextfield.getText().trim();
+            stock = Integer.parseInt(stockTextfield.getText().trim());
+            price = Double.parseDouble(priceTextfield.getText().trim());
+            min = Integer.parseInt(minTextfield.getText().trim());
+            max = Integer.parseInt(maxTextfield.getText().trim());
         } else {
             new Alert(Alert.AlertType.ERROR, "All fields are required").showAndWait();
             return;
@@ -160,7 +160,7 @@ public class PartFormController implements Initializable {
         if (toggleGroup.getSelectedToggle() == inHouseRadioBtn) {
             int machineId;
             try {
-                machineId = Integer.parseInt(typeTextfield.getText());
+                machineId = Integer.parseInt(typeTextfield.getText().trim());
             } catch (NumberFormatException e) {
                 new Alert(Alert.AlertType.ERROR,
                         "Please enter a valid machine ID"
@@ -179,7 +179,7 @@ public class PartFormController implements Initializable {
         }
 
         if (toggleGroup.getSelectedToggle() == outsourcedRadioBtn) {
-            String companyName = typeTextfield.getText();
+            String companyName = typeTextfield.getText().trim();
             if (companyName.isEmpty()) {
                 new Alert(Alert.AlertType.ERROR,
                         "Please enter a company name"
@@ -196,11 +196,11 @@ public class PartFormController implements Initializable {
                     companyName
             );
         }
-        if (part != null) {
-            Inventory.updatePart(part.getId(), updatedPart);
-        } else {
-            Inventory.addPart(updatedPart);
+
+        if (updatedPart != null) {
+            Inventory.updatePart(updatedPart);
         }
+
         clearTextfields();
         ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
     }
@@ -219,9 +219,9 @@ public class PartFormController implements Initializable {
     }
 
     private boolean validateStock() {
-        int min = Integer.parseInt(minTextfield.getText());
-        int max = Integer.parseInt(maxTextfield.getText());
-        int stock = Integer.parseInt(stockTextfield.getText());
+        int min = Integer.parseInt(minTextfield.getText().trim());
+        int max = Integer.parseInt(maxTextfield.getText().trim());
+        int stock = Integer.parseInt(stockTextfield.getText().trim());
 
         return min <= stock && stock <= max;
     }

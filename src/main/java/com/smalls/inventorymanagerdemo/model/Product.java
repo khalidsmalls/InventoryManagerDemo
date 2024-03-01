@@ -7,23 +7,23 @@ import javafx.collections.ObservableMap;
 public class Product {
     private final int id;
 
-    private String name;
+    private final String name;
 
-    private double price;
+    private final double price;
 
-    private int stock;
+    private final int stock;
 
     /**
      * product minimun stock
      */
-    private int min;
+    private final int min;
 
     /**
      * product maximum stock
      */
-    private int max;
+    private final int max;
 
-    ObservableMap<Integer, Part> associatedParts;
+    ObservableList<Part> associatedParts;
 
     public Product(
             int id,
@@ -31,7 +31,8 @@ public class Product {
             double price,
             int stock,
             int min,
-            int max
+            int max,
+            ObservableList<Part> associatedParts
     ) {
         this.id = id;
         this.name = name;
@@ -39,7 +40,7 @@ public class Product {
         this.stock = stock;
         this.min = min;
         this.max = max;
-        associatedParts = FXCollections.observableHashMap();
+        this.associatedParts = associatedParts;
     }
 
     public int getId() {
@@ -50,69 +51,23 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public double getPrice() {
         return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public int getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
     public int getMin() {
         return min;
-    }
-
-    public void setMin(int min) {
-        this.min = min;
     }
 
     public int getMax() {
         return max;
     }
 
-    public void setMax(int max) {
-        this.max = max;
-    }
-
-    public void addAssociatedPart(Part part) {
-        associatedParts.put(part.getId(), part);
-    }
-
-    public void addAssociatedParts(ObservableList<Part> parts) {
-
-        ObservableMap<Integer, Part> partsMap = FXCollections.observableHashMap();
-
-        for (Part p : parts) {
-           partsMap.put(p.getId(), p);
-        }
-
-        associatedParts.putAll(partsMap);
-    }
-
-    public void removeAssociatedPart(Part p) {
-       associatedParts.remove(p.getId(), p);
-    }
-
-    public void removeAssociatedParts(ObservableList<Part> parts) {
-
-        for (Part p : parts) {
-            associatedParts.remove(p.getId(), p);
-        }
-    }
-
-    public ObservableMap<Integer, Part> getAssociatedParts() {
+    public ObservableList<Part> getAssociatedParts() {
         return associatedParts;
     }
 }

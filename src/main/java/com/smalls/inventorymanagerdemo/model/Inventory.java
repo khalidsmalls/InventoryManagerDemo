@@ -3,7 +3,6 @@ package com.smalls.inventorymanagerdemo.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
-import java.util.Comparator;
 import java.util.Map;
 
 public class Inventory {
@@ -32,29 +31,34 @@ public class Inventory {
         return products;
     }
 
-
-    private static final Comparator<Product> compareProductsById = Comparator.comparingInt(Product::getId);
-
     /**
      * add new part and increment id
-     * by 2 so that it remains even
+     * by 2 if key is not present in
+     * partsMap so that it remains even.
+     * otherwise, update part
      *
-     * @param p the part to be added
+     * @param part the part to be added or
+     *             updated
      */
-    public static void addPart(Part p) {
-        parts.put(p.getId(), p);
-        nextPartId += 2;
+    public static void updatePart(Part part) {
+        if (!parts.containsKey(part.getId())) {
+            nextPartId += 2;
+        }
+        parts.put(part.getId(), part);
     }
 
     /**
      * add new product and increment id
      * by 2 so that it remains odd
      *
-     * @param p
+     * @param product the product to be added
+     *                of updated
      */
-    public static void addProduct(Product p) {
-        products.put(p.getId(), p);
-        nextProductId += 2;
+    public static void updateProduct(Product product) {
+        if (!products.containsKey(product.getId())) {
+            nextProductId += 2;
+        }
+        products.put(product.getId(), product);
     }
 
     public static int getNextPartId() {
@@ -107,14 +111,6 @@ public class Inventory {
         }
 
         return matchingProducts;
-    }
-
-    public static void updatePart(int id, Part part) {
-        parts.put(id, part);
-    }
-
-    public static void updateProduct(int id, Product product) {
-        products.put(id, product);
     }
 
     public static void removePart(int id) {
