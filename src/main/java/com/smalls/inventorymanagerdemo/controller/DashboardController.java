@@ -82,7 +82,11 @@ public class DashboardController implements Initializable {
 
     private ObservableList<Part> parts;
 
+    private ObservableList<Product> products;
+
     public final Comparator<Part> comparePartsById = Comparator.comparingInt(Part::getId);
+
+    public final Comparator<Product> compareProductsById = Comparator.comparingInt(Product::getId);
 
     private final UnaryOperator<TextFormatter.Change> textLengthFilterOperator = change -> {
         String newText = change.getControlNewText();
@@ -212,6 +216,10 @@ public class DashboardController implements Initializable {
     @FXML
     private void onDeletePart() {
         Part p = partsTable.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            new Alert(Alert.AlertType.ERROR, "Please select a part").showAndWait();
+            return;
+        }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you would like to delete " + p.getName() + "?"
         );
@@ -222,15 +230,66 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
-    private void onNewProduct() {
+    private void onNewProduct() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(
+                "/com/smalls/inventorymanagerdemo/productForm-view.fxml")
+        );
+        Parent root = loader.load();
+        ProductFormController controller = loader.getController();
+        controller.setProduct(null);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setMinWidth(1250.0);
+        stage.setMinHeight(850.0);
+        stage.show();
     }
 
     @FXML
-    private void onModifyProduct() {
+    private void onModifyProduct() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(
+                "/com/smalls/inventorymanagerdemo/productForm-view.fxml")
+        );
+        Parent root = loader.load();
+        ProductFormController controller = loader.getController();
+        Product p = productTable.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Please select a product")
+                    .showAndWait();
+            return;
+        }
+        controller.setProduct(p);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setMinWidth(1250.0);
+        stage.setMinHeight(850.0);
+        stage.show();
     }
 
     @FXML
     private void onDeleteProduct() {
+        Product p = productTable.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Please select a product")
+                    .showAndWait();
+            return;
+        }
+        if (!p.getAssociatedParts().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Whoops! Cannot delete a product that has associated parts")
+                    .showAndWait();
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you would like to delete " + p.getName() + "?"
+        );
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Inventory.removeProduct(p.getId());
+        }
     }
 
     @FXML
@@ -296,9 +355,22 @@ public class DashboardController implements Initializable {
     }
 
     private void initProductTable() {
-        ObservableList<Product> products = FXCollections.observableArrayList(
-                Inventory.getAllProducts().values()
-        );
+        ObservableMap<Integer, Product> productsMap = Inventory.getAllProducts();
+        products = FXCollections.observableArrayList(productsMap.values());
+        productsMap.addListener((MapChangeListener<Integer, ? super Product>) change -> {
+            if (change.wasAdded()) {
+                Product update = change.getValueAdded();
+                products.sort(compareProductsById);
+                int index = Collections.binarySearch(products, update, compareProductsById);
+                if (index >= 0) {
+                    products.set(index, update);
+                    return;
+                }
+                products.add(update);
+            } else {
+                products.remove(change.getValueRemoved());
+            }
+        });
         productTable.setItems(products);
 
         productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
