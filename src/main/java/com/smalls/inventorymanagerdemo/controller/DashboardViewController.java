@@ -23,7 +23,7 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
-public class DashboardController implements Initializable {
+public class DashboardViewController implements Initializable {
 
     @FXML
     private TextField partSearchTextfield;
@@ -78,7 +78,7 @@ public class DashboardController implements Initializable {
 
     private NumberFormat currencyFormat;
 
-    private final Stage stage = new Stage();
+    private Stage stage;
 
     private ObservableList<Part> parts;
 
@@ -98,6 +98,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        stage = new Stage();
         initPartsTable();
         initProductTable();
         partSearchTextfield.setTextFormatter(
@@ -178,10 +179,10 @@ public class DashboardController implements Initializable {
     private void onNewPart() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/partForm-view.fxml")
+                "/com/smalls/inventorymanagerdemo/part-view.fxml")
         );
         Parent root = loader.load();
-        PartFormController controller = loader.getController();
+        PartViewController controller = loader.getController();
         controller.setPart(null);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -194,10 +195,10 @@ public class DashboardController implements Initializable {
     private void onModifyPart() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/partForm-view.fxml")
+                "/com/smalls/inventorymanagerdemo/part-view.fxml")
         );
         Parent root = loader.load();
-        PartFormController controller = loader.getController();
+        PartViewController controller = loader.getController();
         Part p = partsTable.getSelectionModel().getSelectedItem();
         if (p == null) {
             new Alert(Alert.AlertType.ERROR,
@@ -217,11 +218,14 @@ public class DashboardController implements Initializable {
     private void onDeletePart() {
         Part p = partsTable.getSelectionModel().getSelectedItem();
         if (p == null) {
-            new Alert(Alert.AlertType.ERROR, "Please select a part").showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                    "Please select a part")
+                    .showAndWait();
             return;
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Are you sure you would like to delete " + p.getName() + "?"
+                "Are you sure you would like to delete " +
+                        p.getName() + "?"
         );
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -233,10 +237,10 @@ public class DashboardController implements Initializable {
     private void onNewProduct() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/productForm-view.fxml")
+                "/com/smalls/inventorymanagerdemo/product-view.fxml")
         );
         Parent root = loader.load();
-        ProductFormController controller = loader.getController();
+        ProductViewController controller = loader.getController();
         controller.setProduct(null);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -249,10 +253,10 @@ public class DashboardController implements Initializable {
     private void onModifyProduct() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/productForm-view.fxml")
+                "/com/smalls/inventorymanagerdemo/product-view.fxml")
         );
         Parent root = loader.load();
-        ProductFormController controller = loader.getController();
+        ProductViewController controller = loader.getController();
         Product p = productTable.getSelectionModel().getSelectedItem();
         if (p == null) {
             new Alert(Alert.AlertType.ERROR,
@@ -323,6 +327,7 @@ public class DashboardController implements Initializable {
             }
         });
         partsTable.setItems(parts);
+        partsTable.setPlaceholder(new Text("there are no parts"));
 
         partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -372,6 +377,7 @@ public class DashboardController implements Initializable {
             }
         });
         productTable.setItems(products);
+        productTable.setPlaceholder(new Text("there are no products"));
 
         productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));

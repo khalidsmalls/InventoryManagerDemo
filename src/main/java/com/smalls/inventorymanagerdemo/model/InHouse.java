@@ -2,7 +2,7 @@ package com.smalls.inventorymanagerdemo.model;
 
 public class InHouse extends Part {
 
-    private int machineId;
+    private final int machineId;
 
     public InHouse(
             int id,
@@ -14,10 +14,6 @@ public class InHouse extends Part {
             int machineId
     ) {
         super(id, name, price, stock, min, max);
-        this.machineId = machineId;
-    }
-
-    public void setMachineId(int machineId) {
         this.machineId = machineId;
     }
 

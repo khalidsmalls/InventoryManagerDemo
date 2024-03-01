@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-public class PartFormController implements Initializable {
+public class PartViewController implements Initializable {
 
     private final String IN_HOUSE_LABEL_TEXT = "Machine ID";
 

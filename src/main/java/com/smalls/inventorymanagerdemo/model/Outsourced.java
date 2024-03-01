@@ -2,7 +2,7 @@ package com.smalls.inventorymanagerdemo.model;
 
 public class Outsourced extends Part {
 
-    private String companyName;
+    private final String companyName;
 
     public Outsourced(
             int id,
@@ -14,10 +14,6 @@ public class Outsourced extends Part {
             String companyName
     ) {
         super(id, name, price, stock, min, max);
-        this.companyName = companyName;
-    }
-
-    public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
 

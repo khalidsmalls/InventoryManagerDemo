@@ -19,7 +19,7 @@ import java.text.NumberFormat;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-public class ProductFormController implements Initializable {
+public class ProductViewController implements Initializable {
 
     @FXML
     private Label productFormLabel;
@@ -131,7 +131,6 @@ public class ProductFormController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         idTextfield.setEditable(false);
         currencyFormat = NumberFormat.getCurrencyInstance();
-        searchTextfield.setTextFormatter(new TextFormatter<>(lengthFilter));
         setTextFormatters();
         initPartsTable();
         initAssocPartsTable();
@@ -247,10 +246,8 @@ public class ProductFormController implements Initializable {
 
     private void initAssocPartsTable() {
         assocParts = FXCollections.observableArrayList();
-        if (product != null) {
-            assocParts.addAll(product.getAssociatedParts());
-        }
         assocPartsTable.setItems(assocParts);
+        assocPartsTable.setPlaceholder(new Text("there are no associated parts"));
         assocPartsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         assocPartIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         assocPartNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -273,6 +270,7 @@ public class ProductFormController implements Initializable {
     private void initPartsTable() {
         parts = FXCollections.observableArrayList(Inventory.getAllParts().values());
         partsTable.setItems(parts);
+        partsTable.setPlaceholder(new Text("there are no parts"));
         partsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -317,6 +315,7 @@ public class ProductFormController implements Initializable {
     }
 
     private void setTextFormatters() {
+        searchTextfield.setTextFormatter(new TextFormatter<>(lengthFilter));
         nameTextfield.setTextFormatter(new TextFormatter<>(stringFilter));
         priceTextfield.setTextFormatter(new TextFormatter<>(doubleFilter));
         stockTextfield.setTextFormatter(new TextFormatter<>(intFilter));
@@ -332,6 +331,7 @@ public class ProductFormController implements Initializable {
         priceTextfield.setText(String.valueOf(p.getPrice()));
         minTextfield.setText(String.valueOf(p.getMin()));
         maxTextfield.setText(String.valueOf(p.getMax()));
+        assocParts.addAll(product.getAssociatedParts());
     }
 
     private void initNewProductForm() {
