@@ -224,17 +224,17 @@ public class ProductFormController implements Initializable {
             id = product.getId();
         }
 
-        Product updatedProduct = new Product(
-                id,
-                name,
-                price,
-                stock,
-                min,
-                max,
-                assocPartsTable.getItems()
+        Inventory.updateProduct(
+                new Product(
+                        id,
+                        name,
+                        price,
+                        stock,
+                        min,
+                        max,
+                        assocPartsTable.getItems()
+                )
         );
-
-        Inventory.updateProduct(updatedProduct);
 
         clearTextfields();
         ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();

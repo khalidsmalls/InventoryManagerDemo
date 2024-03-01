@@ -138,13 +138,16 @@ public class PartFormController implements Initializable {
             min = Integer.parseInt(minTextfield.getText().trim());
             max = Integer.parseInt(maxTextfield.getText().trim());
         } else {
-            new Alert(Alert.AlertType.ERROR, "All fields are required").showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                    "All fields are required")
+                    .showAndWait();
             return;
         }
 
         if (!validateStock()) {
             new Alert(Alert.AlertType.ERROR,
-                    "Stock must be greater than or equal to min and less than or equal to max"
+                    "Stock must be greater than or equal to" +
+                            " min and less than or equal to max"
             ).showAndWait();
             return;
         }

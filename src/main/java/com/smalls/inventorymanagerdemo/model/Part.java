@@ -4,21 +4,21 @@ public abstract class Part {
 
     private final int id;
 
-    private String name;
+    private final String name;
 
-    private double price;
+    private final double price;
 
-    private int stock;
+    private final int stock;
 
     /**
      * minimum stock
      */
-    private int min;
+    private final int min;
 
     /**
      * maximum stock
      */
-    private int max;
+    private final int max;
 
     public Part(
             int id,
@@ -44,39 +44,20 @@ public abstract class Part {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public double getPrice() {
         return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public int getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
     public int getMin() {
         return min;
-    }
-
-    public void setMin(int min) {
-        this.min = min;
     }
 
     public int getMax() {
         return max;
     }
 
-    public void setMax(int max) {
-        this.max = max;
-    }
 }
