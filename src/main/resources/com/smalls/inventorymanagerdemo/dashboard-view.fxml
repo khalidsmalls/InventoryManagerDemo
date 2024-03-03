@@ -16,13 +16,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1150.0" style="-fx-background-color: #b0aac0;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smalls.inventorymanagerdemo.controller.DashboardViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1150.0" style="-fx-background-color: #b0aac0;" styleClass="root" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smalls.inventorymanagerdemo.controller.DashboardViewController">
    <children>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f0efef;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #f0efef;" styleClass="main" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <top>
             <StackPane alignment="CENTER_LEFT" prefHeight="103.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label text="JavaFX Inventory Manager" textFill="#776d94">
+                  <Label styleClass="main-header" text="JavaFX Inventory Manager" textFill="#776d94">
                      <font>
                         <Font name="SauceCodePro NFM SemiBold" size="50.0" />
                      </font>
@@ -55,7 +55,7 @@
                                              <children>
                                                 <StackPane prefHeight="150.0" prefWidth="200.0">
                                                    <children>
-                                                      <Label text="Parts" textFill="#776d94">
+                                                      <Label styleClass="table-header" text="Parts" textFill="#776d94">
                                                          <font>
                                                             <Font name="SauceCodePro NFM Black Italic" size="27.0" />
                                                          </font>
@@ -76,12 +76,12 @@
                                                             </StackPane>
                                                             <StackPane prefHeight="93.0" prefWidth="121.0">
                                                                <children>
-                                                                  <Button mnemonicParsing="false" onAction="#onPartSearch" style="-fx-background-color: #616b6b;" text="Search" textFill="#eaece5">
+                                                                  <Button mnemonicParsing="false" onAction="#onPartSearch" styleClass="btn" text="Search">
                                                                      <padding>
                                                                         <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                                                                      </padding>
                                                                      <font>
-                                                                        <Font name="SauceCodePro NF SemiBold" size="14.0" />
+                                                                        <Font name="Andale Mono" size="12.0" />
                                                                      </font>
                                                                   </Button>
                                                                </children>
@@ -126,7 +126,12 @@
                                        <children>
                                           <ButtonBar prefHeight="40.0" prefWidth="838.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="217.0">
                                             <buttons>
-                                              <Button mnemonicParsing="false" onAction="#onNewPart" style="-fx-background-color: #616b6b;" text="New" textFill="#eaece5">
+                                              <Button mnemonicParsing="false" onAction="#onNewPart" styleClass="btn" text="New" textFill="#eaece5">
+                                                   <font>
+                                                      <Font name="SauceCodePro NF SemiBold" size="14.0" />
+                                                   </font>
+                                                </Button>
+                                                <Button mnemonicParsing="false" onAction="#onModifyPart" style="-fx-background-color: #616b6b;" styleClass="btn" text="Modify" textFill="#eaece5">
                                                    <padding>
                                                       <Insets bottom="7.0" top="7.0" />
                                                    </padding>
@@ -134,15 +139,7 @@
                                                       <Font name="SauceCodePro NF SemiBold" size="14.0" />
                                                    </font>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#onModifyPart" style="-fx-background-color: #616b6b;" text="Modify" textFill="#eaece5">
-                                                   <padding>
-                                                      <Insets bottom="7.0" top="7.0" />
-                                                   </padding>
-                                                   <font>
-                                                      <Font name="SauceCodePro NF SemiBold" size="14.0" />
-                                                   </font>
-                                                </Button>
-                                                <Button mnemonicParsing="false" onAction="#onDeletePart" style="-fx-background-color: #616b6b;" text="Delete" textFill="#eaece5">
+                                                <Button mnemonicParsing="false" onAction="#onDeletePart" style="-fx-background-color: #616b6b;" styleClass="btn" text="Delete" textFill="#eaece5">
                                                    <padding>
                                                       <Insets bottom="7.0" top="7.0" />
                                                    </padding>
@@ -172,7 +169,7 @@
                                              <children>
                                                 <StackPane prefHeight="45.0" prefWidth="150.0">
                                                    <children>
-                                                      <Label text="Products" textFill="#776d94">
+                                                      <Label styleClass="table-header" text="Products" textFill="#776d94">
                                                          <font>
                                                             <Font name="SauceCodePro NFM Black Italic" size="27.0" />
                                                          </font>
@@ -193,12 +190,12 @@
                                                             </StackPane>
                                                             <StackPane prefHeight="93.0" prefWidth="121.0">
                                                                <children>
-                                                                  <Button mnemonicParsing="false" onAction="#onProductSearch" style="-fx-background-color: #616b6b;" text="Search" textFill="#eaece5">
+                                                                  <Button mnemonicParsing="false" onAction="#onProductSearch" style="-fx-background-color: #616b6b;" styleClass="btn" text="Search" textFill="#eaece5">
                                                                      <padding>
                                                                         <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                                                                      </padding>
                                                                      <font>
-                                                                        <Font name="SauceCodePro NF SemiBold" size="14.0" />
+                                                                        <Font name="SauceCodePro NF SemiBold" size="12.0" />
                                                                      </font>
                                                                   </Button>
                                                                </children>
@@ -245,7 +242,7 @@
                                        <children>
                                           <ButtonBar prefHeight="40.0" prefWidth="838.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="217.0">
                                              <buttons>
-                                                <Button mnemonicParsing="false" onAction="#onNewProduct" style="-fx-background-color: #616b6b;" text="New" textFill="#eaece5">
+                                                <Button mnemonicParsing="false" onAction="#onNewProduct" style="-fx-background-color: #616b6b;" styleClass="btn" text="New" textFill="#eaece5">
                                                    <padding>
                                                       <Insets bottom="7.0" top="7.0" />
                                                    </padding>
@@ -253,7 +250,7 @@
                                                       <Font name="SauceCodePro NF SemiBold" size="14.0" />
                                                    </font>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#onModifyProduct" style="-fx-background-color: #616b6b;" text="Modify" textFill="#eaece5">
+                                                <Button mnemonicParsing="false" onAction="#onModifyProduct" style="-fx-background-color: #616b6b;" styleClass="btn" text="Modify" textFill="#eaece5">
                                                    <padding>
                                                       <Insets bottom="7.0" top="7.0" />
                                                    </padding>
@@ -261,7 +258,7 @@
                                                       <Font name="SauceCodePro NF SemiBold" size="14.0" />
                                                    </font>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#onDeleteProduct" style="-fx-background-color: #616b6b;" text="Delete" textFill="#eaece5">
+                                                <Button mnemonicParsing="false" onAction="#onDeleteProduct" style="-fx-background-color: #616b6b;" styleClass="btn" text="Delete" textFill="#eaece5">
                                                    <padding>
                                                       <Insets bottom="7.0" top="7.0" />
                                                    </padding>
@@ -288,7 +285,7 @@
          <bottom>
             <ButtonBar prefHeight="50.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
               <buttons>
-                <Button mnemonicParsing="false" onAction="#onClose" style="-fx-background-color: #616b6b;" text="Close" textFill="#eaece5">
+                <Button mnemonicParsing="false" onAction="#onClose" style="-fx-background-color: #616b6b;" styleClass="btn" text="Close" textFill="#eaece5">
                      <font>
                         <Font name="SauceCodePro NF SemiBold" size="16.0" />
                      </font>

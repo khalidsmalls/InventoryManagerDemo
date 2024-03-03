@@ -14,13 +14,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #b0aac0;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smalls.inventorymanagerdemo.controller.PartViewController">
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #b0aac0;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smalls.inventorymanagerdemo.controller.PartViewController">
    <children>
-      <BorderPane layoutX="179.0" layoutY="146.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="999.0" style="-fx-background-color: #f0efef;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="main" layoutX="179.0" layoutY="146.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="999.0" style="-fx-background-color: #f0efef;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <top>
             <StackPane prefHeight="113.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="partFormLabel" textFill="#776d94" StackPane.alignment="CENTER_LEFT">
+                  <Label fx:id="partFormLabel" styleClass="main-header" textFill="#776d94" StackPane.alignment="CENTER_LEFT">
                      <padding>
                         <Insets left="75.0" />
                      </padding>
@@ -37,7 +37,7 @@
          <bottom>
             <ButtonBar prefHeight="69.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
               <buttons>
-                <Button mnemonicParsing="false" onAction="#onSave" style="-fx-background-color: #616b6b;" text="Save" textFill="#eaece5">
+                <Button mnemonicParsing="false" onAction="#onSave" style="-fx-background-color: #616b6b;" styleClass="btn" text="Save" textFill="#eaece5">
                      <padding>
                         <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                      </padding>
@@ -45,7 +45,7 @@
                         <Font name="SauceCodePro NF SemiBold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onCancel" style="-fx-background-color: #616b6b;" text="Cancel" textFill="#eaece5">
+                  <Button mnemonicParsing="false" onAction="#onCancel" style="-fx-background-color: #616b6b;" styleClass="btn" text="Cancel" textFill="#eaece5">
                      <padding>
                         <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                      </padding>
@@ -55,128 +55,139 @@
                   </Button>
               </buttons>
                <padding>
-                  <Insets right="50.0" />
+                  <Insets bottom="20.0" right="50.0" />
                </padding>
             </ButtonBar>
          </bottom>
          <center>
             <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="998.0" BorderPane.alignment="CENTER">
                <children>
-                  <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="790.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="135.0" AnchorPane.topAnchor="20.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="388.0" minWidth="10.0" prefWidth="189.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.0" minWidth="0.0" prefWidth="188.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="299.0" minWidth="10.0" prefWidth="135.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="322.0" minWidth="10.0" prefWidth="209.0" />
-                     </columnConstraints>
-                     <rowConstraints>
+                  <GridPane layoutX="409.0" layoutY="146.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="52.0" minHeight="8.0" prefHeight="51.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
                      <children>
-                        <StackPane prefHeight="65.0" prefWidth="195.0">
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
                            <children>
-                              <Label text="Part ID" textFill="#776d94">
-                                 <font>
-                                    <Font name="SauceCodePro NF SemiBold" size="20.0" />
-                                 </font>
-                              </Label>
+                              <Label styleClass="input-label" text="ID" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="1">
                            <children>
-                              <Label text="Name" textFill="#776d94">
-                                 <font>
-                                    <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                 </font>
-                              </Label>
+                              <Label styleClass="input-label" text="Name" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="2">
                            <children>
-                              <Label text="Stock" textFill="#776d94">
-                                 <font>
-                                    <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                 </font>
-                              </Label>
+                              <Label styleClass="input-label" text="Stock" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="3">
                            <children>
-                              <Label text="Price per unit" textFill="#776d94">
-                                 <font>
-                                    <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                 </font>
-                              </Label>
+                              <Label styleClass="input-label" text="Price Per Unit" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="4">
                            <children>
-                              <Label text="Min" textFill="#776d94">
-                                 <font>
-                                    <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                 </font></Label>
+                              <Label styleClass="input-label" text="Min" />
                            </children>
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="5">
                            <children>
-                              <Label fx:id="typeLabel" textFill="#776d94">
-                                 <font>
-                                    <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                 </font></Label>
+                              <Label fx:id="typeLabel" styleClass="input-label" />
                            </children>
                         </StackPane>
-                        <TextField fx:id="stockTextfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="idTextfield" GridPane.columnIndex="1" />
-                        <TextField fx:id="nameTextfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="priceTextfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField fx:id="minTextfield" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextField fx:id="typeTextfield" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <StackPane prefHeight="55.0" prefWidth="171.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
                            <children>
-                              <Label text="Max" textFill="#776d94">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font></Label>
+                              <TextField fx:id="idTextfield" />
                            </children>
                            <padding>
-                              <Insets left="30.0" />
+                              <Insets right="10.0" />
                            </padding>
                         </StackPane>
-                        <AnchorPane prefHeight="150.0" prefWidth="390.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowSpan="3">
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <GridPane layoutX="95.0" layoutY="56.0" prefHeight="106.0" prefWidth="195.0" AnchorPane.topAnchor="5.0">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <RadioButton fx:id="inHouseRadioBtn" mnemonicParsing="false" onAction="#onInHouseRadioClick" text="In-House" textFill="#776d94">
-                                       <font>
-                                          <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                       </font>
-                                    </RadioButton>
-                                    <RadioButton fx:id="outsourcedRadioBtn" mnemonicParsing="false" onAction="#onOutsourcedRadioClick" text="Outsourced" textFill="#776d94" GridPane.rowIndex="1">
-                                       <font>
-                                          <Font name="SauceCodePro NFM SemiBold" size="20.0" />
-                                       </font>
-                                    </RadioButton>
-                                 </children>
-                              </GridPane>
+                              <TextField fx:id="nameTextfield" />
                            </children>
-                        </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
-                              <TextField fx:id="maxTextfield" layoutY="16.0" />
+                              <TextField fx:id="stockTextfield" />
                            </children>
-                        </AnchorPane>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <children>
+                              <TextField fx:id="priceTextfield" />
+                           </children>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                           <children>
+                              <TextField fx:id="minTextfield" />
+                           </children>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <children>
+                              <TextField fx:id="typeTextfield" />
+                           </children>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                           <children>
+                              <Label styleClass="input-label" text="Max" />
+                           </children>
+                           <padding>
+                              <Insets left="50.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                           <children>
+                              <TextField fx:id="maxTextfield" />
+                           </children>
+                           <padding>
+                              <Insets right="20.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                           <children>
+                              <RadioButton fx:id="inHouseRadioBtn" mnemonicParsing="false" onAction="#onInHouseRadioClick" styleClass="input-label" text="InHouse" />
+                           </children>
+                           <padding>
+                              <Insets right="21.0" />
+                           </padding>
+                        </StackPane>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                           <children>
+                              <RadioButton fx:id="outsourcedRadioBtn" mnemonicParsing="false" onAction="#onOutsourcedRadioClick" styleClass="input-label" text="Outsourced" />
+                           </children>
+                        </StackPane>
                      </children>
                   </GridPane>
                </children>

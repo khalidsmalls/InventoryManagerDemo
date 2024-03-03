@@ -1,5 +1,6 @@
 package com.smalls.inventorymanagerdemo.controller;
 
+import com.smalls.inventorymanagerdemo.MainApplication;
 import com.smalls.inventorymanagerdemo.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -185,8 +186,12 @@ public class DashboardViewController implements Initializable {
         PartViewController controller = loader.getController();
         controller.setPart(null);
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
+                        .toExternalForm()
+        );
         stage.setScene(scene);
-        stage.setMinWidth(1000.0);
+        stage.setMinWidth(1100.0);
         stage.setMinHeight(635.0);
         stage.show();
     }
@@ -208,8 +213,12 @@ public class DashboardViewController implements Initializable {
         }
         controller.setPart(p);
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(
+                        getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
+                .toExternalForm()
+        );
         stage.setScene(scene);
-        stage.setMinWidth(1000.0);
+        stage.setMinWidth(1100.0);
         stage.setMinHeight(635.0);
         stage.show();
     }
@@ -243,6 +252,10 @@ public class DashboardViewController implements Initializable {
         ProductViewController controller = loader.getController();
         controller.setProduct(null);
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(
+                        getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
+                .toExternalForm()
+        );
         stage.setScene(scene);
         stage.setMinWidth(1250.0);
         stage.setMinHeight(850.0);
@@ -266,6 +279,10 @@ public class DashboardViewController implements Initializable {
         }
         controller.setProduct(p);
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(
+                        getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
+                .toExternalForm()
+        );
         stage.setScene(scene);
         stage.setMinWidth(1250.0);
         stage.setMinHeight(850.0);

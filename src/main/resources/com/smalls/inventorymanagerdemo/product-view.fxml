@@ -16,13 +16,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="850.0" prefWidth="1200.0" style="-fx-background-color: #b0aac0;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smalls.inventorymanagerdemo.controller.ProductViewController">
+<AnchorPane fx:id="root" prefHeight="850.0" prefWidth="1200.0" style="-fx-background-color: #b0aac0;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smalls.inventorymanagerdemo.controller.ProductViewController">
    <children>
-      <BorderPane layoutX="517.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f0efef;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="main" layoutX="517.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f0efef;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <top>
             <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="productFormLabel" textFill="#776d94" StackPane.alignment="CENTER_LEFT">
+                  <Label fx:id="productFormLabel" styleClass="main-header" textFill="#776d94" StackPane.alignment="CENTER_LEFT">
                      <font>
                         <Font name="SauceCodePro NFM SemiBold" size="50.0" />
                      </font>
@@ -36,7 +36,7 @@
          <bottom>
             <ButtonBar prefHeight="64.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
               <buttons>
-                <Button mnemonicParsing="false" onAction="#onSave" style="-fx-background-color: #616b6b;" text="Save" textFill="#eaece5">
+                <Button mnemonicParsing="false" onAction="#onSave" style="-fx-background-color: #616b6b;" styleClass="btn" text="Save" textFill="#eaece5">
                      <padding>
                         <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                      </padding>
@@ -44,7 +44,7 @@
                         <Font name="SauceCodePro NFM SemiBold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onCancel" style="-fx-background-color: #616b6b;" text="Cancel" textFill="#eaece5">
+                  <Button mnemonicParsing="false" onAction="#onCancel" style="-fx-background-color: #616b6b;" styleClass="btn" text="Cancel" textFill="#eaece5">
                      <padding>
                         <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                      </padding>
@@ -89,7 +89,7 @@
                                  <children>
                                     <StackPane prefHeight="150.0" prefWidth="200.0">
                                        <children>
-                                          <Label text="Product ID" textFill="#776d94">
+                                          <Label styleClass="input-label" text="Product ID" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM SemiBold" size="20.0" />
                                              </font>
@@ -98,7 +98,7 @@
                                     </StackPane>
                                     <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="1">
                                        <children>
-                                          <Label text="Name" textFill="#776d94">
+                                          <Label styleClass="input-label" text="Name" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM SemiBold" size="20.0" />
                                              </font>
@@ -107,7 +107,7 @@
                                     </StackPane>
                                     <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="2">
                                        <children>
-                                          <Label text="Stock" textFill="#776d94">
+                                          <Label styleClass="input-label" text="Stock" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM SemiBold" size="20.0" />
                                              </font>
@@ -116,7 +116,7 @@
                                     </StackPane>
                                     <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="3">
                                        <children>
-                                          <Label text="Price Per Unit" textFill="#776d94">
+                                          <Label styleClass="input-label" text="Price Per Unit" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM SemiBold" size="20.0" />
                                              </font>
@@ -125,7 +125,7 @@
                                     </StackPane>
                                     <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="4">
                                        <children>
-                                          <Label text="Min" textFill="#776d94">
+                                          <Label styleClass="input-label" text="Min" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM SemiBold" size="20.0" />
                                              </font>
@@ -134,7 +134,7 @@
                                     </StackPane>
                                     <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowIndex="5">
                                        <children>
-                                          <Label text="Max" textFill="#776d94">
+                                          <Label styleClass="input-label" text="Max" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM SemiBold" size="20.0" />
                                              </font>
@@ -217,7 +217,7 @@
                                                 </StackPane>
                                                 <StackPane prefHeight="42.0" prefWidth="111.0">
                                                    <children>
-                                                      <Button mnemonicParsing="false" onAction="#onSearch" style="-fx-background-color: #616b6b;" text="Search" textFill="#eaece5">
+                                                      <Button mnemonicParsing="false" onAction="#onSearch" style="-fx-background-color: #616b6b;" styleClass="btn" text="Search" textFill="#eaece5">
                                                          <padding>
                                                             <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                                                          </padding>
@@ -238,7 +238,7 @@
                                  <bottom>
                                     <ButtonBar prefHeight="52.0" prefWidth="647.0" BorderPane.alignment="CENTER">
                                       <buttons>
-                                        <Button mnemonicParsing="false" onAction="#onAddAssocPart" style="-fx-background-color: #616b6b;" text="Add" textFill="#eaece5">
+                                        <Button mnemonicParsing="false" onAction="#onAddAssocPart" style="-fx-background-color: #616b6b;" styleClass="btn" text="Add" textFill="#eaece5">
                                              <padding>
                                                 <Insets bottom="7.0" left="8.0" right="8.0" top="7.0" />
                                              </padding>
@@ -278,7 +278,7 @@
                                  <top>
                                     <AnchorPane prefHeight="62.0" prefWidth="647.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <Label layoutX="61.0" layoutY="23.0" text="Associated Parts" textFill="#776d94">
+                                          <Label layoutX="61.0" layoutY="23.0" styleClass="table-header" text="Associated Parts" textFill="#776d94">
                                              <font>
                                                 <Font name="SauceCodePro NFM Black Italic" size="27.0" />
                                              </font>
@@ -289,7 +289,7 @@
                                  <bottom>
                                     <ButtonBar prefHeight="43.0" prefWidth="647.0" BorderPane.alignment="CENTER">
                                       <buttons>
-                                        <Button mnemonicParsing="false" onAction="#onRemoveAssocPart" style="-fx-background-color: #616b6b;" text="Remove" textFill="#eaece5">
+                                        <Button mnemonicParsing="false" onAction="#onRemoveAssocPart" style="-fx-background-color: #616b6b;" styleClass="btn" text="Remove" textFill="#eaece5">
                                              <font>
                                                 <Font name="SauceCodePro NF SemiBold" size="14.0" />
                                              </font>
