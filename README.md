@@ -1,8 +1,9 @@
 # JavaFX Inventory Manager Demo
 
-This is a simple javafx application that manages CRUD operations for parts and products. 
-Products are composed of parts, which may be made in-house or outsourced, thus a part may 
-not be deleted if it is associated with a product. 
-
 - jdk-openjdk 21.0.2
 - javafx-sdk-21.0.2
+
+- manage create, update, delete operations for parts and products
+- parts may be in-house or outsourced
+- products may be composed of associated parts
+- products with associated parts may not be deleted
