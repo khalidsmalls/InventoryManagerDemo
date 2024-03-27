@@ -19,12 +19,19 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class DashboardViewController implements Initializable {
+
+    private final String PART_VIEW = "/com/smalls/inventorymanagerdemo/part-view.fxml";
+    private final String PRODUCT_VIEW = "/com/smalls/inventorymanagerdemo/product-view.fxml";
+    private final String IN_HOUSE_TYPE_LABEL_TEXT = "Machine ID";
+    private final String stylesheetPath = "/com/smalls/inventorymanagerdemo/styles.css";
+    private final URL STYLESHEET = getClass().getResource(stylesheetPath);
 
     @FXML
     private TextField partSearchTextfield;
@@ -102,12 +109,8 @@ public class DashboardViewController implements Initializable {
         stage = new Stage();
         initPartsTable();
         initProductTable();
-        partSearchTextfield.setTextFormatter(
-                new TextFormatter<>(textLengthFilterOperator)
-        );
-        productSearchTextfield.setTextFormatter(
-                new TextFormatter<>(textLengthFilterOperator)
-        );
+        partSearchTextfield.setTextFormatter(new TextFormatter<>(textLengthFilterOperator));
+        productSearchTextfield.setTextFormatter(new TextFormatter<>(textLengthFilterOperator));
         currencyFormat = NumberFormat.getCurrencyInstance();
     }
 
@@ -127,9 +130,7 @@ public class DashboardViewController implements Initializable {
             //then get part by id
             int id = Integer.parseInt(searchString);
             Part p = Inventory.getPartById(id);
-            if (p != null) {
-                parts.add(p);
-            }
+            if (p != null) parts.add(p);
             partsTable.setItems(parts);
             partsTable.getSelectionModel().select(p);
         } catch (NumberFormatException e) {
@@ -149,9 +150,7 @@ public class DashboardViewController implements Initializable {
     @FXML
     private void onProductSearch() {
         String searchString = productSearchTextfield.getText().trim();
-        if (searchString.isEmpty()) {
-            return;
-        }
+        if (searchString.isEmpty()) return;
 
         productTable.setPlaceholder(new Text("Product not found"));
         ObservableList<Product> products = FXCollections.observableArrayList();
@@ -159,9 +158,7 @@ public class DashboardViewController implements Initializable {
         try {
             int id = Integer.parseInt(searchString);
             Product p = Inventory.getProductById(id);
-            if (p != null) {
-                products.add(p);
-            }
+            if (p != null) products.add(p);
             productTable.setItems(products);
             productTable.getSelectionModel().select(p);
         } catch (NumberFormatException e) {
@@ -179,17 +176,16 @@ public class DashboardViewController implements Initializable {
     @FXML
     private void onNewPart() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/part-view.fxml")
-        );
+        loader.setLocation(getClass().getResource(PART_VIEW));
         Parent root = loader.load();
         PartViewController controller = loader.getController();
-        controller.setPart(null);
+        controller.setPartFormLabelText("New Part");
+        controller.setTypeLabelText(IN_HOUSE_TYPE_LABEL_TEXT);
+        controller.setInHouseRadioBtnSelected();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(
-                getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
-                        .toExternalForm()
-        );
+        if (STYLESHEET != null) {
+            scene.getStylesheets().add(STYLESHEET.toExternalForm());
+        }
         stage.setScene(scene);
         stage.setMinWidth(1100.0);
         stage.setMinHeight(635.0);
@@ -198,25 +194,35 @@ public class DashboardViewController implements Initializable {
 
     @FXML
     private void onModifyPart() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/part-view.fxml")
-        );
-        Parent root = loader.load();
-        PartViewController controller = loader.getController();
+        String msg;
         Part p = partsTable.getSelectionModel().getSelectedItem();
         if (p == null) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Please select a part")
-                    .showAndWait();
+            msg = "Please select a part";
+            new Alert(Alert.AlertType.ERROR, msg).showAndWait();
             return;
         }
-        controller.setPart(p);
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(PART_VIEW));
+        loader.setControllerFactory(param -> new PartViewController(p));
+        Parent root = loader.load();
+        PartViewController controller = loader.getController();
+        controller.setPartFormLabelText("Modify Part");
+        if (p instanceof InHouse) {
+            controller.setInHouseRadioBtnSelected();
+            controller.setTypeLabelText(IN_HOUSE_TYPE_LABEL_TEXT);
+        } else if (p instanceof Outsourced) {
+            controller.setOutsourcedRadioBtnSelected();
+            controller.setTypeLabelText("Company Name");
+        } else {
+           msg = "This isn't our part";
+           new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+           return;
+        }
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(
-                        getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
-                .toExternalForm()
-        );
+        if (STYLESHEET != null) {
+            scene.getStylesheets().add(STYLESHEET.toExternalForm());
+        }
         stage.setScene(scene);
         stage.setMinWidth(1100.0);
         stage.setMinHeight(635.0);
@@ -245,17 +251,14 @@ public class DashboardViewController implements Initializable {
     @FXML
     private void onNewProduct() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/product-view.fxml")
-        );
+        loader.setLocation(getClass().getResource(PRODUCT_VIEW));
         Parent root = loader.load();
         ProductViewController controller = loader.getController();
-        controller.setProduct(null);
+        controller.setProductFormLabelText("New Product");
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(
-                        getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
-                .toExternalForm()
-        );
+        if (STYLESHEET != null) {
+            scene.getStylesheets().add(STYLESHEET.toExternalForm());
+        }
         stage.setScene(scene);
         stage.setMinWidth(1250.0);
         stage.setMinHeight(850.0);
@@ -264,25 +267,22 @@ public class DashboardViewController implements Initializable {
 
     @FXML
     private void onModifyProduct() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(
-                "/com/smalls/inventorymanagerdemo/product-view.fxml")
-        );
-        Parent root = loader.load();
-        ProductViewController controller = loader.getController();
         Product p = productTable.getSelectionModel().getSelectedItem();
         if (p == null) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Please select a product")
-                    .showAndWait();
+            String msg = "Please select a product";
+            new Alert(Alert.AlertType.ERROR, msg).showAndWait();
             return;
         }
-        controller.setProduct(p);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(PRODUCT_VIEW));
+        loader.setControllerFactory(c -> new ProductViewController(p));
+        Parent root = loader.load();
+        ProductViewController controller = loader.getController();
+        controller.setProductFormLabelText("Modify Product");
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(
-                        getClass().getResource("/com/smalls/inventorymanagerdemo/styles.css"))
-                .toExternalForm()
-        );
+        if (STYLESHEET != null) {
+            scene.getStylesheets().add(STYLESHEET.toExternalForm());
+        }
         stage.setScene(scene);
         stage.setMinWidth(1250.0);
         stage.setMinHeight(850.0);
@@ -292,21 +292,19 @@ public class DashboardViewController implements Initializable {
     @FXML
     private void onDeleteProduct() {
         Product p = productTable.getSelectionModel().getSelectedItem();
+        String msg;
         if (p == null) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Please select a product")
-                    .showAndWait();
+            msg = "Please select a product";
+            new Alert(Alert.AlertType.ERROR, msg).showAndWait();
             return;
         }
         if (!p.getAssociatedParts().isEmpty()) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Whoops! Cannot delete a product that has associated parts")
-                    .showAndWait();
+            msg = "Whoops! Cannot delete a product that has associated parts";
+            new Alert(Alert.AlertType.ERROR, msg).showAndWait();
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Are you sure you would like to delete " + p.getName() + "?"
-        );
+        msg = "Are you sure you would like to delete " + p.getName() + "?";
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, msg);
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Inventory.removeProduct(p.getId());
@@ -315,10 +313,8 @@ public class DashboardViewController implements Initializable {
 
     @FXML
     private void onClose(ActionEvent event) {
-        Alert confirm = new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "Are you sure you would like to close the application?"
-        );
+        String msg = "Are you sure you would like to close the application?";
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, msg);
         Optional<ButtonType> result = confirm.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -359,11 +355,11 @@ public class DashboardViewController implements Initializable {
             } else if (part instanceof Outsourced) {
                 return new SimpleStringProperty("Outsourced");
             } else {
-                return new SimpleStringProperty("Dunno what this part is");
+                return new SimpleStringProperty("This is not our part!");
             }
         });
 
-        partPriceColumn.setCellFactory(c -> new TableCell<Part, Double>() {
+        partPriceColumn.setCellFactory(c -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
@@ -403,7 +399,7 @@ public class DashboardViewController implements Initializable {
         productMinColumn.setCellValueFactory(new PropertyValueFactory<>("min"));
         productMaxColumn.setCellValueFactory(new PropertyValueFactory<>("max"));
 
-        productPriceColumn.setCellFactory(cell -> new TableCell<Product, Double>() {
+        productPriceColumn.setCellFactory(cell -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);

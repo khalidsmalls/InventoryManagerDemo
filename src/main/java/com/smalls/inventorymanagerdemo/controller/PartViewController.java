@@ -16,10 +16,6 @@ import java.util.function.UnaryOperator;
 
 public class PartViewController implements Initializable {
 
-    private final String IN_HOUSE_LABEL_TEXT = "Machine ID";
-
-    private final String OUTSOURCED_LABEL_TEXT = "Company Name";
-
     @FXML
     private Label partFormLabel;
 
@@ -90,39 +86,60 @@ public class PartViewController implements Initializable {
         return null;
     };
 
+    public PartViewController() {}
+
+    public PartViewController(Part p) {
+        this.part = p;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         toggleGroup = new ToggleGroup();
         toggleGroup.getToggles().addAll(inHouseRadioBtn, outsourcedRadioBtn);
         idTextfield.setEditable(false);
         setTextFormatters();
+
+        if (part == null) {
+            idTextfield.setText("Auto Gen - Disabled");
+            typeTextfield.setTextFormatter(new TextFormatter<>(intFilter));
+        } else {
+            if (part instanceof InHouse) {
+                typeTextfield.setTextFormatter(new TextFormatter<>(intFilter));
+            } else {
+                typeTextfield.setTextFormatter(new TextFormatter<>(stringFilter));
+            }
+            populatePartData(part);
+        }
     }
 
-    public void setPart(Part part) {
-        this.part = part;
-        if (part == null) {
-            initNewPartForm();
-        } else {
-            initModifyPartForm(part);
-        }
+    public void setPartFormLabelText(String s) {
+        partFormLabel.setText(s);
+    }
+
+    public void setTypeLabelText(String s) {
+        typeLabel.setText(s);
+    }
+
+    public void setInHouseRadioBtnSelected() {
+        inHouseRadioBtn.setSelected(true);
+    }
+
+    public void setOutsourcedRadioBtnSelected() {
+        outsourcedRadioBtn.setSelected(true);
     }
 
     @FXML
     private void onInHouseRadioClick() {
-        typeLabel.setText(IN_HOUSE_LABEL_TEXT);
+        typeLabel.setText("Machine ID");
         typeTextfield.clear();
-        typeTextfield.setTextFormatter(
-                new TextFormatter<>(intFilter)
-        );
+        typeTextfield.setTextFormatter(new TextFormatter<>(intFilter));
     }
 
     @FXML
     private void onOutsourcedRadioClick() {
-        typeLabel.setText(OUTSOURCED_LABEL_TEXT);
+        typeLabel.setText("Company Name");
         typeTextfield.clear();
-        typeTextfield.setTextFormatter(
-                new TextFormatter<>(stringFilter)
-        );
+        typeTextfield.setTextFormatter(new TextFormatter<>(stringFilter));
     }
 
     @FXML
@@ -152,12 +169,7 @@ public class PartViewController implements Initializable {
             return;
         }
 
-        if (part == null) {
-            id = Inventory.getNextPartId();
-        } else {
-            id = part.getId();
-        }
-
+        id = (part == null) ? Inventory.getNextPartId() : part.getId();
         Part updatedPart = null; //the part to be saved
 
         if (toggleGroup.getSelectedToggle() == inHouseRadioBtn) {
@@ -165,9 +177,8 @@ public class PartViewController implements Initializable {
             try {
                 machineId = Integer.parseInt(typeTextfield.getText().trim());
             } catch (NumberFormatException e) {
-                new Alert(Alert.AlertType.ERROR,
-                        "Please enter a valid machine ID"
-                ).showAndWait();
+                String msg = "Please enter a valid machine ID";
+                new Alert(Alert.AlertType.ERROR, msg).showAndWait();
                 return;
             }
             updatedPart = new InHouse(
@@ -239,60 +250,26 @@ public class PartViewController implements Initializable {
     }
 
     private void setTextFormatters() {
-        stockTextfield.setTextFormatter(
-                new TextFormatter<>(intFilter)
-        );
-        minTextfield.setTextFormatter(
-                new TextFormatter<>(intFilter)
-        );
-        maxTextfield.setTextFormatter(
-                new TextFormatter<>(intFilter)
-        );
-        priceTextfield.setTextFormatter(
-                new TextFormatter<>(doubleFilter)
-        );
-        nameTextfield.setTextFormatter(
-                new TextFormatter<>(stringFilter)
-        );
+        stockTextfield.setTextFormatter(new TextFormatter<>(intFilter));
+        minTextfield.setTextFormatter(new TextFormatter<>(intFilter));
+        maxTextfield.setTextFormatter(new TextFormatter<>(intFilter));
+        priceTextfield.setTextFormatter(new TextFormatter<>(doubleFilter));
+        nameTextfield.setTextFormatter(new TextFormatter<>(stringFilter));
     }
 
-    private void initNewPartForm() {
-        idTextfield.setText("Auto Gen - Disabled");
-        partFormLabel.setText("New Part");
-        typeLabel.setText(IN_HOUSE_LABEL_TEXT);
-        typeTextfield.setTextFormatter(
-                new TextFormatter<>(intFilter)
-        );
-        inHouseRadioBtn.setSelected(true);
-    }
-
-    private void initModifyPartForm(Part p) {
+    private void populatePartData(Part p) {
         idTextfield.setText(String.valueOf(p.getId()));
         nameTextfield.setText(p.getName());
         stockTextfield.setText(String.valueOf(p.getStock()));
         priceTextfield.setText(String.valueOf(p.getPrice()));
         minTextfield.setText(String.valueOf(p.getMin()));
         maxTextfield.setText(String.valueOf(p.getMax()));
-        partFormLabel.setText("Modify Part");
         if (p instanceof InHouse) {
-            inHouseRadioBtn.setSelected(true);
-            typeLabel.setText(IN_HOUSE_LABEL_TEXT);
-            typeTextfield.setTextFormatter(
-                    new TextFormatter<>(intFilter)
-            );
-            typeTextfield.setText(
-                    String.valueOf(
-                            ((InHouse) p).getMachineId())
-            );
+            String machineId = String.valueOf(((InHouse) p).getMachineId());
+            typeTextfield.setText(machineId);
         } else {
-            outsourcedRadioBtn.setSelected(true);
-            typeLabel.setText(OUTSOURCED_LABEL_TEXT);
-            typeTextfield.setTextFormatter(
-                    new TextFormatter<>(stringFilter)
-            );
-            typeTextfield.setText(
-                    ((Outsourced) p).getCompanyName()
-            );
+            String companyName = ((Outsourced) p).getCompanyName();
+            typeTextfield.setText(companyName);
         }
     }
 }

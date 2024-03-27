@@ -127,6 +127,12 @@ public class ProductViewController implements Initializable {
         return change;
     };
 
+    public ProductViewController() {}
+
+    public ProductViewController(Product p) {
+        this.product = p;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         idTextfield.setEditable(false);
@@ -134,15 +140,16 @@ public class ProductViewController implements Initializable {
         setTextFormatters();
         initPartsTable();
         initAssocPartsTable();
+
+        if (product == null) {
+            idTextfield.setText("Auto Gen- Disabled");
+        } else {
+            populateProductData(product);
+        }
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-        if (product == null) {
-            initNewProductForm();
-        } else {
-            initModifyProductForm(product);
-        }
+    public void setProductFormLabelText(String s) {
+        productFormLabel.setText(s);
     }
 
     @FXML
@@ -323,8 +330,7 @@ public class ProductViewController implements Initializable {
         maxTextfield.setTextFormatter(new TextFormatter<>(intFilter));
     }
 
-    private void initModifyProductForm(Product p) {
-        productFormLabel.setText("Modify Product");
+    private void populateProductData(Product p) {
         idTextfield.setText(String.valueOf((p.getId())));
         nameTextfield.setText(p.getName());
         stockTextfield.setText(String.valueOf(p.getStock()));
@@ -334,8 +340,4 @@ public class ProductViewController implements Initializable {
         assocParts.addAll(product.getAssociatedParts());
     }
 
-    private void initNewProductForm() {
-        idTextfield.setText("Auto Gen- Disabled");
-        productFormLabel.setText("New Product");
-    }
 }
