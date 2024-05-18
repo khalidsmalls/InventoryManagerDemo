@@ -10,11 +10,11 @@
 
 <table>
   <tr>
-    <td><img src="/screenshots/landingPage.png" alt="landing page" width="200" /></td>
-    <td><img src="/screenshots/newPart.png" alt="new part page" width="200" /></td>
+    <td><img src="/screenshots/landingPage.png" alt="landing page" width="300" /></td>
+    <td><img src="/screenshots/newPart.png" alt="new part page" width="300" /></td>
   </tr>
   <tr>
-    <td><img src="/screenshots/modifyPart.png" alt="modify part page" width="200" /></td>
-    <td><img src="/screenshots/newProduct.png" alt="new product page" width="200" /></td>
+    <td><img src="/screenshots/modifyPart.png" alt="modify part page" width="300" /></td>
+    <td><img src="/screenshots/newProduct.png" alt="new product page" width="300" /></td>
   </tr>
 </table>
