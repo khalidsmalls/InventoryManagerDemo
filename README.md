@@ -10,7 +10,7 @@
 
 <table>
   <tr>
-    <td align="center"><img src="/screenshots/landingPage.png" alt="landing page" width="300" height="250" /></td>
+    <td align="center"><img src="/screenshots/landingPage.png" alt="landing page" width="450" /></td>
     <td><img src="/screenshots/newPart.png" alt="new part page" width="500" /></td>
   </tr>
   <tr>
